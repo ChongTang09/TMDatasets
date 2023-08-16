@@ -49,3 +49,51 @@ class AudioTransform(torch.nn.Module):
         features = self.transform(resampled_wave)
 
         return features
+
+class MFCCStandardizer:
+    def __init__(self):
+        self.mean_vals = None
+        self.std_vals = None
+
+    def fit(self, X):
+        """
+        Compute mean and standard deviation from the given data.
+
+        :param X: N_samples x 13 x 29 matrix of MFCC features
+        """
+        self.mean_vals = np.mean(X, axis=(0,2), keepdims=True)
+        self.std_vals = np.std(X, axis=(0,2), keepdims=True)
+
+    def transform(self, X):
+        """
+        Standardize the given MFCC data using pre-computed mean and std values.
+
+        :param X: N_samples x 13 x 29 matrix of MFCC features
+        :return: Standardized MFCC matrix
+        """
+        if self.mean_vals is None or self.std_vals is None:
+            raise ValueError("Must fit the standardizer before transforming data")
+
+        return (X - self.mean_vals) / (self.std_vals + 1e-9)
+
+    def inverse_transform(self, X_standardized):
+        """
+        Reverse the standardization for given standardized MFCC data.
+
+        :param X_standardized: Standardized N_samples x 13 x 29 matrix of MFCC features
+        :return: Original MFCC matrix
+        """
+        if self.mean_vals is None or self.std_vals is None:
+            raise ValueError("Must fit the standardizer before inverse transforming data")
+
+        return X_standardized * (self.std_vals + 1e-9) + self.mean_vals
+
+    def fit_transform(self, X):
+        """
+        Compute mean and std from the data and then standardize it.
+
+        :param X: N_samples x 13 x 29 matrix of MFCC features
+        :return: Standardized MFCC matrix
+        """
+        self.fit(X)
+        return self.transform(X)

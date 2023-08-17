@@ -4,6 +4,10 @@ from torch.utils.data import Dataset
 
 class MNIST(Dataset):
     def __init__(self, root_dir='./root_dir', train=True, transform=None, download=True):
+
+        if not os.path.exists(root_dir):
+            os.makedirs(root_dir)
+
         self.mnist_data = datasets.MNIST(root=root_dir, train=train, download=download)
 
         if transform:

@@ -5,9 +5,11 @@ import subprocess
 from torch.utils.data import Dataset
 
 class UrbanSound8K(Dataset):
-    def __init__(self, root = './', transform = None, train = True, test_fold = 1, download=True):
+    def __init__(self, root = './root_dir', transform = None, train = True, test_fold = 1, download=True):
         
         self.root_dir = root
+        if not os.path.exists(root_dir):
+            os.makedirs(root_dir)
         self.transform = transform
 
         # Check if the data is present, if not, download and extract it.

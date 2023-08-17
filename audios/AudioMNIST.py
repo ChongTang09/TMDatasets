@@ -15,6 +15,9 @@ class AudioMNISTDataset(Dataset):
             seed (int): Random seed to ensure reproducibility.
         """
         self.root = root_dir
+        if not os.path.exists(root_dir):
+            os.makedirs(root_dir)
+
         self.transform = transform
 
         self.data = []

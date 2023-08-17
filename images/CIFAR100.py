@@ -5,6 +5,10 @@ from torch.utils.data import Dataset
 
 class CIFAR100Dataset(Dataset):
     def __init__(self, root_dir='./root_dir', train=True, transform=None, download=True):
+
+        if not os.path.exists(root_dir):
+            os.makedirs(root_dir)
+
         self.cifar100_data = datasets.CIFAR100(root=root_dir, train=train, download=download)
         
         # Delete the downloaded .tar.gz file after extracting

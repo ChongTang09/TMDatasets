@@ -81,6 +81,9 @@ class PAMAP2Dataset(Dataset):
     def __init__(self, root_dir='./root_dir', train=True, binarize=True, lstm=False, 
                 more_features=False, download=True, train_size_per_class=40000, test_size_per_class=10000):
         self.root_dir = root_dir
+        if not os.path.exists(root_dir):
+            os.makedirs(root_dir)
+            
         self.train = train
         self.lstm = lstm
         self.train_size = train_size_per_class

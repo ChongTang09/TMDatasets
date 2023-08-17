@@ -4,6 +4,10 @@ from torchaudio.datasets import SPEECHCOMMANDS
 
 class SubsetSC(SPEECHCOMMANDS):
     def __init__(self, root_dir='./root_dir', train=True, transform=None, download=True, labels = ['yes', 'no', 'up', 'down', 'left', 'right' ,'on' ,'off', 'stop', 'go']):
+        
+        if not os.path.exists(root_dir):
+            os.makedirs(root_dir)
+            
         super().__init__(root_dir, download=download)
 
         # Delete the downloaded .tar.gz file after extracting

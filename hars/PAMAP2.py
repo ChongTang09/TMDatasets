@@ -266,21 +266,3 @@ class PAMAP2Dataset(Dataset):
             sample = (self.X_test[idx], self.y_test[idx])
         
         return sample
-
-pamap2 = PAMAP2Dataset(root_dir='./root_dir', train=True, binarize=True, lstm=False, more_features=True, 
-        download=True, train_size_per_class=40000, test_size_per_class=10000)
-
-from pyTsetlinMachine.tm import MultiClassTsetlinMachine
-
-tm = MultiClassTsetlinMachine(500, 40, 5.0)
-
-print("\nMean accuracy over 1 runs:\n")
-tm_results = np.empty(0)
-for i in range(1):
-    X_train, Y_train, X_test, Y_test = pamap2.X_train, pamap2.y_train, pamap2.X_test, pamap2.y_test
-    print(np.unique(Y_train))
-    print(np.unique(Y_test))
-    for epochs in range(10):
-        tm.fit(X_train, Y_train, epochs=1, incremental=True)
-        tm_results = np.append(tm_results, np.array(100*(tm.predict(X_test) == Y_test).mean()))
-        print("#%d Average Accuracy: %.2f%% +/- %.2f" % (i+1, tm_results.mean(), 1.96*tm_results.std()/np.sqrt(i+1)))
